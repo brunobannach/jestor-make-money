@@ -1,0 +1,137 @@
+# Para todos os containers
+docker-compose down
+
+# Remove volumes antigos
+docker-compose down -v
+
+# Inicia novamente
+docker-compose up -d
+# Remover ou comentar a linha com 'version'
+# version: "3.8" 
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: jestor
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  memcached:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
+
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  aws:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEBUG=1 
+docker ps
+docker-compose logs wordpress
+cat docker-compose.yml
+
+# Para os containers
+docker-compose down
+
+# Remove volumes antigos
+docker-compose down -v
+
+# Inicia novamente
+docker-compose up -d
+cat > docker-compose.yml << 'EOL'
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: jestor
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  memcached:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
+
+  opensearch:
+    image: opensearchproject/opensearch:latest
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  aws:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "80:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: jestor
+    volumes:
+      - ./wordpress-root:/var/www/html
+    depends_on:
+      - mysql
+EOL
+# Para os containers
+docker-compose down
+
+# Remove volumes antigos
+docker-compose down -v
+
+# Inicia novamente
+docker-compose up -d
+npm install -g vercel
+
+npm i -g vercel
+vercel login
+
+# Entre na pasta do projeto
+cd seu-projeto
+
+# Instale as dependências
+npm install
+
+# Rode o projeto localmente
+npm run dev
+
+git clone https://github.com/Jestor-Tecnologia/rivendell.git
+
