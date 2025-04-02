@@ -1,0 +1,5 @@
+# Project specific
+dev-env/
+rivendell/
+
+# ... existing code ... 
