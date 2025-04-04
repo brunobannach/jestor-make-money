@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "#/*": ["rivendell/src/*"]
+    }
+  },
+  "references": [
+    { "path": "./rivendell" }
+  ]
+} 

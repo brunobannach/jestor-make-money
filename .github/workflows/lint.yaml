@@ -1,0 +1,61 @@
+name: Lint and check code formatting
+
+on:
+  push:
+    branches:
+      - main
+      - make-money-v3
+  pull_request:
+    branches:
+      - main
+      - make-money-v3
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR: ${{ github.event.pull_request.number }}
+      PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+      REPO: ${{ github.repository }}
+      ACTION_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 40
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+          run_install: false
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "pnpm"
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Setup environment
+        run: |
+          echo "JESTOR_TOKEN=abc123" > .env
+          echo "JESTOR_ORG=sauron" >> .env
+
+      - name: Lint
+        run: pnpm ci-lint
